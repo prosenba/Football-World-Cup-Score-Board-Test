@@ -1,0 +1,17 @@
+﻿@*
+    Needed the partial view to only update the partial view and not the whole page
+*@
+@{
+}
+<div id="scoreBoardDiv">
+    @foreach (var teams in Model.teamsList)
+    {
+
+        @Html.Raw(teams.homeTeamName + " " + teams.homeTeamScore + " " + teams.awayTeamName + " " + teams.awayTeamScore)
+        ;
+        <br />
+
+    }
+</div>
+
+

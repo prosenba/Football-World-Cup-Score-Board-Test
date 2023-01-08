@@ -7,8 +7,4 @@
     <RootNamespace>Football_World_Cup_Score_Board_Test</RootNamespace>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="BLL\" />
-  </ItemGroup>
-
 </Project>

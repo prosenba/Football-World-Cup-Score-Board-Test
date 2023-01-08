@@ -1,5 +1,7 @@
-﻿using Football_World_Cup_Score_Board_Test.Models;
+﻿using Football_World_Cup_Score_Board_Test.BLL;
+using Football_World_Cup_Score_Board_Test.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using System.Diagnostics;
 
 namespace Football_World_Cup_Score_Board_Test.Controllers
@@ -15,7 +17,31 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            Teams teams = new Teams();
+            try
+            {                
+                teams.awayTeamName = "Away team";
+                teams.awayTeamScore = 0;
+                teams.homeTeamName = "Home team";
+                teams.positionAdded = 1;
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogCritical("Exception trying to create Teams Object", ex.Message, ex.InnerException);
+            }
+
+            //Add new Teams to a list
+            List<Teams> teamsList = new List<Teams>();
+            teamsList.Add(teams);
+
+            //create Model for View
+            HomeViewModel model = new HomeViewModel();
+            model.teamsList = teamsList;
+
+            return View("Index", model);
+
+
         }
 
         public IActionResult Privacy()
