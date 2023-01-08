@@ -1,14 +1,13 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Football_World_Cup_Score_Board_Test.Controllers;
+using Microsoft.Extensions.Logging;
 
 namespace Football_World_Cup_Score_Board_Test.BLL
 {
-   
-
     public  class ImportTeamData
     {
-
-        private readonly ILogger<ImportTeamData> _logger;
-        public ImportTeamData(ILogger<ImportTeamData> logger)
+        
+        private readonly ILogger<HomeController> _logger;
+        public ImportTeamData(ILogger<HomeController> logger)
         {
             _logger = logger;
         }
@@ -31,8 +30,8 @@ namespace Football_World_Cup_Score_Board_Test.BLL
 
                 _logger.LogCritical("Exception trying to add strings to List in getTeamDataList() ", ex.Message, ex.InnerException);
             }
-           
 
+            _logger.LogInformation("getTeamDataList method completed");
             return currentDataList;
 
         }

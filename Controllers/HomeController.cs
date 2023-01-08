@@ -10,6 +10,10 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
+      
+
+        
+
 
         public HomeController(ILogger<HomeController> logger)
         {
@@ -49,8 +53,23 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
         public ActionResult GetScores()
         {
             HomeViewModel model = new HomeViewModel();
+           
+            try
+            {
+                
+                ImportTeamData importTeamData = new ImportTeamData(_logger);
+                List<string> teamDataList = importTeamData.getTeamDataList();
 
 
+
+
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+                
 
 
 
