@@ -10,6 +10,14 @@ $('#btnGetCurrentScores').click(function () {
             // Handle the result here
 
             $("#scoreBoardDiv").html(result);
+        },
+        error: function (xhr, status, error) {
+            // Send an error message back to the controller
+            $.ajax({
+                type: 'POST',
+                url: '/Home/HandleJavaScriptError',
+                data: { 'error': error }
+            });
         }
 
 

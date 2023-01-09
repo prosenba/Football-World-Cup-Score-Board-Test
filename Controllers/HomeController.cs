@@ -75,6 +75,20 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
             return PartialView("_DisplayScores", model);
         }
 
+        
+
+        [HttpPost]
+        public ActionResult HandleJavaScriptError(string error)
+        {
+            // Log the error message
+
+            _logger.LogCritical("An error occurred in JavaScript: " + error);
+
+            // You can also return a view or redirect to a different URL here
+            return Json(new { success = true });
+        }
+      
+
             public IActionResult Privacy()
         {
             return View();
