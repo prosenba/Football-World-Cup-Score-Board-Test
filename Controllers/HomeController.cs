@@ -11,12 +11,14 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
     {
         private readonly ILogger<HomeController> _logger;
         private readonly ILogger<ImportTeamData> _importTeamDataLogger;
+        private readonly ILogger<ParseTeamStringList> _parseTeamStringListLogger;
 
 
-        public HomeController(ILogger<HomeController> logger, ILogger<ImportTeamData> importTeamDataLogger)
+        public HomeController(ILogger<HomeController> logger, ILogger<ImportTeamData> importTeamDataLogger, ILogger<ParseTeamStringList> parseTeamStringListLogger)
         {
             _logger = logger;
             _importTeamDataLogger = importTeamDataLogger;
+            _parseTeamStringListLogger = parseTeamStringListLogger;
         }
 
         public IActionResult Index()
@@ -52,25 +54,67 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
         public ActionResult GetScores()
         {
             HomeViewModel model = new HomeViewModel();
-           
+            List<string> teamDataList = new List<string>();
+            List<Teams> teamsList = new List<Teams>();
             try
             {
                 
                 ImportTeamData importTeamData = new ImportTeamData(_importTeamDataLogger);
-                List<string> teamDataList = importTeamData.getTeamDataList();
+                teamDataList = importTeamData.getTeamDataList();
+                if (teamDataList.Count > 0)
+                {
+                    //success
+                    _logger.LogTrace("ImportTeamData populated the list correctly");
+                    try
+                    {
+                        ParseTeamStringList parseCurrentData = new ParseTeamStringList(_parseTeamStringListLogger);                        
+                        teamsList = parseCurrentData.ParseStringList(teamDataList);
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogCritical("ParseTeamStringList has failed", ex.Message, ex.InnerException);
+
+                    }
+                }
+                else
+                {
+                    //This will cause the issue moving forward
+                    _logger.LogError("ImportTeamData list is empty");
+                }
+                if (teamDataList.Count > 0)
+                {
+                    //success
+                    _logger.LogTrace("ImportTeamData populated the list correctly");
+                    try
+                    {
+                        //Use StringList of Raw data to pupulate Teams Collection
+                        ParseTeamStringList parseCurrentData = new ParseTeamStringList(_parseTeamStringListLogger);
+                        teamsList = parseCurrentData.ParseStringList(teamDataList);                        
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogCritical("Parsing TeamStringList has failed", ex.Message, ex.InnerException);
+
+                    }
+                }
+                if (teamsList.Count > 0)
+                {
+                    //Need to Sort List for View
 
 
 
 
+                }
+                else
+                {
+                    //This will cause the issue moving forward
+                    _logger.LogError("ImportTeamData list is empty");
+                }
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-
-                throw;
-            }
-                
-
-
+                _logger.LogCritical("ImportTeamData has failed", ex.Message, ex.InnerException);
+            } 
 
             return PartialView("_DisplayScores", model);
         }
