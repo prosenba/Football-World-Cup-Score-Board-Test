@@ -5,17 +5,16 @@ namespace Football_World_Cup_Score_Board_Test.BLL
 {
     public  class ImportTeamData
     {
-        
-        private readonly ILogger<HomeController> _logger;
-        public ImportTeamData(ILogger<HomeController> logger)
+        private readonly ILogger<ImportTeamData> _importTeamDataLogger;               
+        public ImportTeamData(ILogger<ImportTeamData> logger)
         {
-            _logger = logger;
+            _importTeamDataLogger = logger;
         }
 
-        public List<string> currentDataList = new List<string>();
+       private List<string> currentDataList = new List<string>();
         public List<string> getTeamDataList()
         {
-            _logger.LogInformation("getTeamDataList method called");
+            _importTeamDataLogger.LogInformation("getTeamDataList method called");
             //current data in the system
             try
             {
@@ -28,10 +27,10 @@ namespace Football_World_Cup_Score_Board_Test.BLL
             catch (Exception ex)
             {
 
-                _logger.LogCritical("Exception trying to add strings to List in getTeamDataList() ", ex.Message, ex.InnerException);
+                _importTeamDataLogger.LogCritical("Exception trying to add strings to List in getTeamDataList() ", ex.Message, ex.InnerException);
             }
 
-            _logger.LogInformation("getTeamDataList method completed");
+            _importTeamDataLogger.LogInformation("getTeamDataList method completed");
             return currentDataList;
 
         }

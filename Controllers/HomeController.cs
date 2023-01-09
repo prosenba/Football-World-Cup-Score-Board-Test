@@ -10,14 +10,13 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
     public class HomeController : Controller
     {
         private readonly ILogger<HomeController> _logger;
-      
-
-        
+        private readonly ILogger<ImportTeamData> _importTeamDataLogger;
 
 
-        public HomeController(ILogger<HomeController> logger)
+        public HomeController(ILogger<HomeController> logger, ILogger<ImportTeamData> importTeamDataLogger)
         {
             _logger = logger;
+            _importTeamDataLogger = importTeamDataLogger;
         }
 
         public IActionResult Index()
@@ -57,7 +56,7 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
             try
             {
                 
-                ImportTeamData importTeamData = new ImportTeamData(_logger);
+                ImportTeamData importTeamData = new ImportTeamData(_importTeamDataLogger);
                 List<string> teamDataList = importTeamData.getTeamDataList();
 
 
