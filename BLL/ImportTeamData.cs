@@ -13,7 +13,7 @@ namespace Football_World_Cup_Score_Board_Test.BLL
 
        private List<string> currentDataList = new List<string>();
         public List<string> getTeamDataList()
-        {
+        {          
             _importTeamDataLogger.LogInformation("getTeamDataList method called");
             //current data in the system
             try
