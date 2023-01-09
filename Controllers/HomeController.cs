@@ -12,20 +12,23 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
         private readonly ILogger<HomeController> _logger;
         private readonly ILogger<ImportTeamData> _importTeamDataLogger;
         private readonly ILogger<ParseTeamStringList> _parseTeamStringListLogger;
+        private readonly ILogger<SortTeamsList> _sortTeamsListLogger;
 
 
-        public HomeController(ILogger<HomeController> logger, ILogger<ImportTeamData> importTeamDataLogger, ILogger<ParseTeamStringList> parseTeamStringListLogger)
+        public HomeController(ILogger<HomeController> logger, ILogger<ImportTeamData> importTeamDataLogger, ILogger<ParseTeamStringList> parseTeamStringListLogger, ILogger<SortTeamsList> sortTeamsListLogger)
         {
             _logger = logger;
             _importTeamDataLogger = importTeamDataLogger;
             _parseTeamStringListLogger = parseTeamStringListLogger;
+            _sortTeamsListLogger = sortTeamsListLogger;
+
         }
 
         public IActionResult Index()
         {
             Teams teams = new Teams();
             try
-            {                
+            {
                 teams.awayTeamName = "Away team";
                 teams.awayTeamScore = 0;
                 teams.homeTeamName = "Home team";
@@ -53,34 +56,18 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
         [HttpPost]
         public ActionResult GetScores()
         {
-            HomeViewModel model = new HomeViewModel();
+            HomeViewModel viewModel = new HomeViewModel();
             List<string> teamDataList = new List<string>();
             List<Teams> teamsList = new List<Teams>();
+            List<Teams> sortedTeams = new List<Teams>();
+
+
             try
             {
-                
+
                 ImportTeamData importTeamData = new ImportTeamData(_importTeamDataLogger);
                 teamDataList = importTeamData.getTeamDataList();
-                if (teamDataList.Count > 0)
-                {
-                    //success
-                    _logger.LogTrace("ImportTeamData populated the list correctly");
-                    try
-                    {
-                        ParseTeamStringList parseCurrentData = new ParseTeamStringList(_parseTeamStringListLogger);                        
-                        teamsList = parseCurrentData.ParseStringList(teamDataList);
-                    }
-                    catch (Exception ex)
-                    {
-                        _logger.LogCritical("ParseTeamStringList has failed", ex.Message, ex.InnerException);
 
-                    }
-                }
-                else
-                {
-                    //This will cause the issue moving forward
-                    _logger.LogError("ImportTeamData list is empty");
-                }
                 if (teamDataList.Count > 0)
                 {
                     //success
@@ -89,11 +76,14 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
                     {
                         //Use StringList of Raw data to pupulate Teams Collection
                         ParseTeamStringList parseCurrentData = new ParseTeamStringList(_parseTeamStringListLogger);
-                        teamsList = parseCurrentData.ParseStringList(teamDataList);                        
+                        teamsList = parseCurrentData.ParseStringList(teamDataList);
+
+                        //Add to Model for Partial
+
                     }
                     catch (Exception ex)
                     {
-                        _logger.LogCritical("Parsing TeamStringList has failed", ex.Message, ex.InnerException);
+                        _logger.LogCritical("Parsing TeamStringList Caused an Exception", ex.Message, ex.InnerException);
 
                     }
                 }
@@ -101,9 +91,23 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
                 {
                     //Need to Sort List for View
 
-
-
-
+                    try
+                    {
+                        SortTeamsList organizeList = new SortTeamsList(_sortTeamsListLogger);
+                        sortedTeams = organizeList.ReOrder(teamsList);
+                        if (sortedTeams.Count > 0)
+                        {
+                            viewModel.teamsList = sortedTeams;
+                        }
+                        else
+                        {
+                            _logger.LogError("Sorted list is empty");
+                        }
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.LogCritical("Sorting The TeamList has failed", ex.Message, ex.InnerException);
+                    }
                 }
                 else
                 {
@@ -113,13 +117,13 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
             }
             catch (Exception ex)
             {
-                _logger.LogCritical("ImportTeamData has failed", ex.Message, ex.InnerException);
-            } 
+                _logger.LogCritical("ImportTeamData Caused an Exception", ex.Message, ex.InnerException);
+            }
 
-            return PartialView("_DisplayScores", model);
+            return PartialView("_DisplayScores", viewModel);
         }
 
-        
+
 
         [HttpPost]
         public ActionResult HandleJavaScriptError(string error)
@@ -131,9 +135,9 @@ namespace Football_World_Cup_Score_Board_Test.Controllers
             // You can also return a view or redirect to a different URL here
             return Json(new { success = true });
         }
-      
 
-            public IActionResult Privacy()
+
+        public IActionResult Privacy()
         {
             return View();
         }
