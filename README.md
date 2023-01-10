@@ -39,5 +39,18 @@ The Final Requirement  Get a summary of games by total score. Those games with t
 returned ordered by the most recently added to our system.
 
 The final order should be 
+Germany 2 France 2
+Uruguay 6 Italy 6
+Argentina 3 Australia 1
+Mexico 0 Canada 5
+Spain 10 Brazil 2
+
+Not as the requierment shows
+The summary would provide with the following information: 
+1. Uruguay 6 - Italy 6 
+2. Spain 10 - Brazil 2 
+3. Mexico 0 - Canada 5 
+4. Argentina 3 - Australia 1 
+5. Germany 2 - France 
 
 
