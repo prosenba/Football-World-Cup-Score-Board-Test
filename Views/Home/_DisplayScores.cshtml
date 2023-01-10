@@ -1,15 +1,36 @@
 ﻿@*
     Needed the partial view to only update the partial view and not the whole page
 *@
+@model HomeViewModel
 @{
+    ViewData["Title"] = "_Display Scores";
 }
-<div id="scoreBoardDiv">
-    @foreach (var teams in Model.teamsList)
-    {
 
-        @Html.Raw(teams.homeTeamName + " " + teams.homeTeamScore + " " + teams.awayTeamName + " " + teams.awayTeamScore)
+
+<div id="scoreBoardDiv">
+    @if (Model.teamsList.Count > 1)
+    {
+        int x = 1; //indexer
+        @foreach (var teams in Model.teamsList)
+        {
+            //show team data as requirement with an int in front
+            @Html.Raw(x.ToString() + " " +teams.homeTeamName + " " + teams.homeTeamScore + " " + teams.awayTeamName + " " + teams.awayTeamScore)
+            ;
+            x++;
+            <br />
+        }
+    }
+    else
+    {
+        //only one team in the list
+        //add the only single team from the list
+        var team = Model.teamsList.FirstOrDefault();
+
+        @Html.Raw(team.homeTeamName + " " + team.homeTeamScore + " " + team.awayTeamName + " " + team.awayTeamScore)
         ;
         <br />
+
+
 
     }
 </div>
