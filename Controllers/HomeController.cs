@@ -1,9 +1,7 @@
 ﻿using Football_World_Cup_Score_Board_Test.BLL;
 using Football_World_Cup_Score_Board_Test.Models;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using System.Diagnostics;
-using System.Reflection;
 
 namespace Football_World_Cup_Score_Board_Test.Controllers
 {
